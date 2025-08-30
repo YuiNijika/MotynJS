@@ -4,7 +4,7 @@
     width: 320px;
 }
 
-/* 默认位置 - 右下角 */
+/* 默认位置 */
 .motym:not(.top-left):not(.top-right):not(.bottom-left) {
     bottom: 20px;
     right: 20px;
@@ -34,47 +34,40 @@
     left: 20px;
 }
 
-.moty1 {
+.motyf-message {
     margin-top: 10px;
     transition: all 0.3s ease;
 }
 
 /* 根据位置调整消息间距 */
-.motym.top-left .moty1,
-.motym.top-right .moty1 {
+.motym.top-left .motyf-message,
+.motym.top-right .motyf-message {
     margin-top: 0;
     margin-bottom: 10px;
 }
 
-.moty1.motym-out .motyf {
-    opacity: 0;
-    transform: translateX(100%);
-}
-
-/* 从左侧进入的动画 */
-.motym.bottom-left .moty1:not(.motym-out) .motyf,
-.motym.top-left .moty1:not(.motym-out) .motyf {
-    -webkit-animation: motyf-enter-left 0.4s cubic-bezier(0.35, 0.71, 0.46, 1.08);
-    animation: motyf-enter-left 0.4s cubic-bezier(0.35, 0.71, 0.46, 1.08);
-}
-
-/* 从右侧进入的动画 */
-.motym.bottom-right .moty1:not(.motym-out) .motyf,
-.motym.top-right .moty1:not(.motym-out) .motyf {
-    -webkit-animation: motyf-enter-right 0.4s cubic-bezier(0.35, 0.71, 0.46, 1.08);
+/* 进入动画 */
+.motyf-message.motyf-enter .motyf {
     animation: motyf-enter-right 0.4s cubic-bezier(0.35, 0.71, 0.46, 1.08);
 }
 
-@-webkit-keyframes motyf-enter-right {
-    0% {
-        transform: translateX(100%);
-        opacity: 0;
-    }
+/* 左侧位置的进入动画 */
+.motym.bottom-left .motyf-message.motyf-enter .motyf,
+.motym.top-left .motyf-message.motyf-enter .motyf {
+    animation: motyf-enter-left 0.4s cubic-bezier(0.35, 0.71, 0.46, 1.08);
+}
 
-    100% {
-        transform: translateX(0);
-        opacity: 1;
-    }
+/* 退出动画 */
+.motyf-message.motym-out .motyf {
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.3s ease;
+}
+
+/* 左侧位置的退出动画 */
+.motym.bottom-left .motyf-message.motym-out .motyf,
+.motym.top-left .motyf-message.motym-out .motyf {
+    transform: translateX(-100%);
 }
 
 @keyframes motyf-enter-right {
@@ -82,19 +75,6 @@
         transform: translateX(100%);
         opacity: 0;
     }
-
-    100% {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-@-webkit-keyframes motyf-enter-left {
-    0% {
-        transform: translateX(-100%);
-        opacity: 0;
-    }
-
     100% {
         transform: translateX(0);
         opacity: 1;
@@ -106,7 +86,6 @@
         transform: translateX(-100%);
         opacity: 0;
     }
-
     100% {
         transform: translateX(0);
         opacity: 1;
