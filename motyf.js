@@ -192,21 +192,21 @@ class motyf {
 const motyfInstance = new motyf();
 
 // 兼容旧的全局函数调用方式
-function motyf(str, type, time, id) {
+window.motyf = function(str, type, time, id) {
     return motyfInstance.show(str, type, time, id);
-}
+};
 
 // 添加便捷方法到全局函数
-motyf.success = (str, time, id) => motyfInstance.success(str, time, id);
-motyf.error = (str, time, id) => motyfInstance.error(str, time, id);
-motyf.warning = (str, time, id) => motyfInstance.warning(str, time, id);
-motyf.info = (str, time, id) => motyfInstance.info(str, time, id);
-motyf_close = (element) => motyfInstance.close(element);
+window.motyf.success = (str, time, id) => motyfInstance.success(str, time, id);
+window.motyf.error = (str, time, id) => motyfInstance.error(str, time, id);
+window.motyf.warning = (str, time, id) => motyfInstance.warning(str, time, id);
+window.motyf.info = (str, time, id) => motyfInstance.info(str, time, id);
+window.motyf_close = (element) => motyfInstance.close(element);
 
 // 点击关闭事件
 document.addEventListener('click', function (e) {
     if (e.target.classList.contains('moty1') || e.target.closest('.moty1')) {
-        const notyElement = e.target.classList.contains('moty1') ? e.target : e.target.closest('.moty1');
-        motyfInstance.close(notyElement);
+        const motyElement = e.target.classList.contains('moty1') ? e.target : e.target.closest('.moty1');
+        motyfInstance.close(motyElement);
     }
 });
