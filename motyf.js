@@ -1,5 +1,8 @@
 /**
- * 消息通知类
+ * MotynJS
+ * 基于Notyf修改的轻量级消息提示组件
+ * @author 鼠子Tomoriゞ
+ * @link https://github.com/YuiNijika/MotynJS
  */
 class MotyfClass {
     /**
@@ -21,6 +24,20 @@ class MotyfClass {
     }
 
     /**
+     * 设置容器位置
+     * @param {string} position 位置 (top-left, top-right, bottom-left, bottom-right)
+     */
+    setPosition(position) {
+        const container = document.querySelector('.motym');
+        if (container) {
+            // 清除所有位置类
+            container.classList.remove('top-left', 'top-right', 'bottom-left', 'bottom-right');
+            // 添加新位置类
+            container.classList.add(position);
+        }
+    }
+
+    /**
      * 显示通知消息
      * @param {string|Object} str 消息内容或配置对象
      * @param {string} [type='success'] 消息类型 (success/danger/warning/info)
@@ -30,14 +47,15 @@ class MotyfClass {
      */
     show(str, type, time, id) {
         // 处理参数重载情况
-        let content, messageType, displayTime, messageId;
+        let content, messageType, displayTime, messageId, position;
         
         if (typeof str === 'object' && str !== null) {
-            // 配置对象形式: motyf({content: "内容", type: "success", time: 3000, id: "msg1"})
+            // 配置对象形式: motyf({content: "内容", type: "success", time: 3000, id: "msg1", position: "top-right"})
             content = str.content || str.str || '';
             messageType = str.type || 'success';
             displayTime = str.time !== undefined ? str.time : 3000;
             messageId = str.id || id;
+            position = str.position;
         } else {
             // 参数形式: motyf("内容", "success", 3000, "msg1")
             content = str || '';
@@ -47,6 +65,11 @@ class MotyfClass {
         }
 
         this.initContainer();
+        
+        // 如果指定了位置，则设置容器位置
+        if (position) {
+            this.setPosition(position);
+        }
 
         let html;
         let isCloseable = !messageId;
@@ -211,5 +234,5 @@ document.addEventListener('click', function (e) {
     }
 });
 
-// 也暴露类本身（如果需要直接实例化）
+// 也暴露类本身
 window.MotyfClass = MotyfClass;
