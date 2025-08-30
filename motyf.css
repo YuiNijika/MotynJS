@@ -5,7 +5,7 @@
 }
 
 /* 默认位置 */
-.motym:not(.top-left):not(.top-right):not(.bottom-left) {
+.motym:not(.top-left):not(.top-right):not(.bottom-left):not(.top-center):not(.bottom-center):not(.left-center):not(.right-center) {
     bottom: 20px;
     right: 20px;
 }
@@ -34,6 +34,42 @@
     left: 20px;
 }
 
+/* 顶部居中 */
+.motym.top-center {
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+    max-width: 100%;
+}
+
+/* 底部居中 */
+.motym.bottom-center {
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+    max-width: 100%;
+}
+
+/* 左侧居中 */
+.motym.left-center {
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: auto;
+    max-width: 100%;
+}
+
+/* 右侧居中 */
+.motym.right-center {
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: auto;
+    max-width: 100%;
+}
+
 .motyf-message {
     margin-top: 10px;
     transition: all 0.3s ease;
@@ -41,9 +77,16 @@
 
 /* 根据位置调整消息间距 */
 .motym.top-left .motyf-message,
-.motym.top-right .motyf-message {
+.motym.top-right .motyf-message,
+.motym.top-center .motyf-message {
     margin-top: 0;
     margin-bottom: 10px;
+}
+
+/* 垂直居中位置的间距调整 */
+.motym.left-center .motyf-message,
+.motym.right-center .motyf-message {
+    margin: 10px 0;
 }
 
 /* 进入动画 */
@@ -53,8 +96,15 @@
 
 /* 左侧位置的进入动画 */
 .motym.bottom-left .motyf-message.motyf-enter .motyf,
-.motym.top-left .motyf-message.motyf-enter .motyf {
+.motym.top-left .motyf-message.motyf-enter .motyf,
+.motym.left-center .motyf-message.motyf-enter .motyf {
     animation: motyf-enter-left 0.4s cubic-bezier(0.35, 0.71, 0.46, 1.08);
+}
+
+/* 顶部和底部居中位置的进入动画 */
+.motym.top-center .motyf-message.motyf-enter .motyf,
+.motym.bottom-center .motyf-message.motyf-enter .motyf {
+    animation: motyf-enter-down 0.4s cubic-bezier(0.35, 0.71, 0.46, 1.08);
 }
 
 /* 退出动画 */
@@ -66,8 +116,22 @@
 
 /* 左侧位置的退出动画 */
 .motym.bottom-left .motyf-message.motym-out .motyf,
-.motym.top-left .motyf-message.motym-out .motyf {
+.motym.top-left .motyf-message.motym-out .motyf,
+.motym.left-center .motyf-message.motym-out .motyf {
     transform: translateX(-100%);
+}
+
+/* 顶部和底部居中位置的退出动画 */
+.motym.top-center .motyf-message.motym-out .motyf,
+.motym.bottom-center .motyf-message.motym-out .motyf {
+    transform: translateY(-50%) scale(0.8);
+    opacity: 0;
+}
+
+/* 右侧居中位置的退出动画 */
+.motym.right-center .motyf-message.motym-out .motyf {
+    transform: translateY(-50%) translateX(100%);
+    opacity: 0;
 }
 
 @keyframes motyf-enter-right {
@@ -88,6 +152,17 @@
     }
     100% {
         transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes motyf-enter-down {
+    0% {
+        transform: translateY(-50%) scale(0.8);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0) scale(1);
         opacity: 1;
     }
 }
