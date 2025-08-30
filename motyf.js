@@ -1,10 +1,10 @@
 /**
- * MotynJS
+ * MotyfJS
  * 基于Notyf修改的轻量级消息提示组件
  * @author 鼠子Tomoriゞ
  * @link https://github.com/YuiNijika/MotynJS
  */
-class MotyfClass {
+class MotyfJS {
     /**
      * 构造函数
      */
@@ -71,13 +71,13 @@ class MotyfClass {
             this.setPosition(position);
         }
 
-        let html;
+        let messageElement;
         let isCloseable = !messageId;
 
         // 更新已有消息或添加新消息
         if (messageId && document.getElementById(messageId)) {
-            html = document.getElementById(messageId);
-            const motyfElement = html.querySelector('.motyf');
+            messageElement = document.getElementById(messageId);
+            const motyfElement = messageElement.querySelector('.motyf');
             if (motyfElement) {
                 motyfElement.className = 'motyf ' + messageType;
 
@@ -87,29 +87,41 @@ class MotyfClass {
                 isCloseable = true;
                 
                 // 重新移除 motym-out 类以确保动画重新触发
-                html.classList.remove('motym-out');
+                messageElement.classList.remove('motym-out');
+                
+                // 强制重排以确保动画重新触发
+                void messageElement.offsetWidth;
             }
         } else {
-            html = document.createElement('div');
-            html.className = 'moty1';
+            messageElement = document.createElement('div');
+            messageElement.className = 'motyf-message';
             if (messageId) {
-                html.id = messageId;
+                messageElement.id = messageId;
             }
 
             // 根据不同类型添加相应的SVG图标
             const iconHtml = this.getIconHtml(messageType);
-            html.innerHTML = `<div class="motyf ${messageType}">${iconHtml}<span class="motyf-text">${content}</span></div>`;
-            document.querySelector('.motym').appendChild(html);
+            messageElement.innerHTML = `<div class="motyf ${messageType}">${iconHtml}<span class="motyf-text">${content}</span></div>`;
+            document.querySelector('.motym').appendChild(messageElement);
+            
+            // 强制重排并添加进入动画类
+            void messageElement.offsetWidth;
+            messageElement.classList.add('motyf-enter');
+            
+            // 动画结束后移除进入动画类
+            setTimeout(() => {
+                messageElement.classList.remove('motyf-enter');
+            }, 400);
         }
 
         // 自动关闭
         if (isCloseable && displayTime > 0) {
             setTimeout(() => {
-                this.close(html);
+                this.close(messageElement);
             }, displayTime);
         }
 
-        return html; // 返回元素引用，便于后续操作
+        return messageElement; // 返回元素引用，便于后续操作
     }
 
     /**
@@ -204,7 +216,7 @@ class MotyfClass {
      * 关闭所有通知消息
      */
     closeAll() {
-        const messages = document.querySelectorAll('.moty1');
+        const messages = document.querySelectorAll('.motyf-message');
         messages.forEach(msg => {
             this.close(msg);
         });
@@ -212,7 +224,7 @@ class MotyfClass {
 }
 
 // 创建全局实例
-const motyfInstance = new MotyfClass();
+const motyfInstance = new MotyfJS();
 
 // 兼容旧的全局函数调用方式
 window.motyf = function(str, type, time, id) {
@@ -228,11 +240,11 @@ window.motyf_close = (element) => motyfInstance.close(element);
 
 // 点击关闭事件
 document.addEventListener('click', function (e) {
-    if (e.target.classList.contains('moty1') || e.target.closest('.moty1')) {
-        const motyElement = e.target.classList.contains('moty1') ? e.target : e.target.closest('.moty1');
+    if (e.target.classList.contains('motyf-message') || e.target.closest('.motyf-message')) {
+        const motyElement = e.target.classList.contains('motyf-message') ? e.target : e.target.closest('.motyf-message');
         motyfInstance.close(motyElement);
     }
 });
 
 // 也暴露类本身
-window.MotyfClass = MotyfClass;
+window.MotyfJS = MotyfJS;
