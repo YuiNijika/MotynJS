@@ -1,7 +1,7 @@
 /**
  * 消息通知类
  */
-class motyf {
+class MotyfClass {
     /**
      * 构造函数
      */
@@ -189,7 +189,7 @@ class motyf {
 }
 
 // 创建全局实例
-const motyfInstance = new motyf();
+const motyfInstance = new MotyfClass();
 
 // 兼容旧的全局函数调用方式
 window.motyf = function(str, type, time, id) {
@@ -210,3 +210,6 @@ document.addEventListener('click', function (e) {
         motyfInstance.close(motyElement);
     }
 });
+
+// 也暴露类本身（如果需要直接实例化）
+window.MotyfClass = MotyfClass;
