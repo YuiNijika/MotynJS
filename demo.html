@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MotyfJS 演示</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/YuiNijika/MotynJS/motyf.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+        .demo-section {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .custom-style {
+            background: linear-gradient(90deg, #8e44ad, #9b59b6) !important;
+        }
+        .custom-style .motyf-icon {
+            color: #f1c40f !important;
+        }
+    </style>
+</head>
+<body>
+    <h1>MotyfJS 消息通知演示</h1>
+    
+    <div class="demo-section">
+        <h2>1. 基本用法</h2>
+        <div class="button-group">
+            <button onclick="motyf('普通消息')">默认消息</button>
+            <button onclick="motyf.success('操作成功！')">成功消息</button>
+            <button onclick="motyf.error('发生错误！')">错误消息</button>
+            <button onclick="motyf.warning('警告提示')">警告消息</button>
+            <button onclick="motyf.info('信息通知')">信息消息</button>
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2>2. 自动关闭控制</h2>
+        <div class="button-group">
+            <button onclick="motyf({content: '5秒后关闭', time: 5000})">5秒自动关闭</button>
+            <button onclick="motyf({content: '需要手动关闭', autoClose: false})">手动关闭</button>
+            <button onclick="testAutoClose()">测试ID消息更新</button>
+            <button onclick="motyfInstance.closeAll()">关闭所有消息</button>
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2>3. 位置控制</h2>
+        <div class="button-group">
+            <button onclick="motyfInstance.setPosition('top-left')">左上角</button>
+            <button onclick="motyfInstance.setPosition('top-right')">右上角</button>
+            <button onclick="motyfInstance.setPosition('top-center')">顶部居中</button>
+            <button onclick="motyfInstance.setPosition('bottom-left')">左下角</button>
+            <button onclick="motyfInstance.setPosition('bottom-right')">右下角</button>
+            <button onclick="motyfInstance.setPosition('bottom-center')">底部居中</button>
+            <button onclick="motyfInstance.setPosition('left-center')">左侧居中</button>
+            <button onclick="motyfInstance.setPosition('right-center')">右侧居中</button>
+        </div>
+        <div class="button-group">
+            <button onclick="motyf({content: '这条消息指定位置', position: 'top-center'})">单独指定位置</button>
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2>4. 高级功能</h2>
+        <div class="button-group">
+            <button onclick="testUpdatableMessage()">可更新消息(带进度)</button>
+            <button onclick="testInteractiveMessage()">交互式消息</button>
+            <button onclick="testCustomStyle()">自定义样式</button>
+            <button onclick="testHTMLContent()">HTML内容</button>
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2>5. 自定义实例</h2>
+        <div class="button-group">
+            <button onclick="testCustomInstance()">创建自定义实例</button>
+        </div>
+    </div>
+    <script>
+        // 测试自动关闭功能
+        function testAutoClose() {
+            const msgId = "auto-close-test";
+            motyf({
+                content: "这条消息3秒后会更新",
+                id: msgId,
+                time: 3000
+            });
+            
+            setTimeout(() => {
+                motyf({
+                    content: "消息已更新！",
+                    type: "success",
+                    id: msgId,
+                    time: 3000
+                });
+            }, 1000);
+        }
+
+        // 测试可更新消息
+        function testUpdatableMessage() {
+            const progressId = "upload-progress";
+            let progress = 0;
+            
+            motyf({
+                content: `上传进度: ${progress}%`,
+                id: progressId,
+                autoClose: false
+            });
+
+            const interval = setInterval(() => {
+                progress += 10;
+                motyf({
+                    content: `上传进度: ${progress}%`,
+                    id: progressId,
+                    type: progress === 100 ? "success" : "info"
+                });
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => motyfInstance.close(document.getElementById(progressId)), 2000);
+                }
+            }, 500);
+        }
+
+        // 测试交互式消息
+        function testInteractiveMessage() {
+            const interactiveMsg = motyf({
+                content: `
+                    <div style="padding: 5px;">
+                        <p>确定要删除这个文件吗？</p>
+                        <div style="display: flex; gap: 10px; margin-top: 10px;">
+                            <button class="confirm-btn" style="padding: 5px 10px; background: #e74c3c;">确认删除</button>
+                            <button class="cancel-btn" style="padding: 5px 10px; background: #95a5a6;">取消</button>
+                        </div>
+                    </div>
+                `,
+                type: "warning",
+                autoClose: false
+            });
+
+            // 使用事件委托处理按钮点击
+            interactiveMsg.addEventListener('click', (e) => {
+                if (e.target.classList.contains('confirm-btn')) {
+                    motyf.success("文件已删除");
+                    motyfInstance.close(interactiveMsg);
+                } else if (e.target.classList.contains('cancel-btn')) {
+                    motyf.info("操作已取消");
+                    motyfInstance.close(interactiveMsg);
+                }
+            });
+        }
+
+        // 测试自定义样式
+        function testCustomStyle() {
+            motyf({
+                content: "自定义样式消息",
+                type: "custom-style"
+            });
+        }
+
+        // 测试HTML内容
+        function testHTMLContent() {
+            motyf({
+                content: `
+                    <div>
+                        <h3 style="margin: 0 0 5px 0;">HTML内容</h3>
+                        <p style="margin: 0;">支持<strong>加粗</strong>、<em>斜体</em>等格式</p>
+                        <ul style="margin: 5px 0 0 0; padding-left: 20px;">
+                            <li>列表项1</li>
+                            <li>列表项2</li>
+                        </ul>
+                    </div>
+                `,
+                time: 5000
+            });
+        }
+
+        // 测试自定义实例
+        function testCustomInstance() {
+            const customMotyf = new MotyfJS({
+                defaultAutoClose: false,
+                defaultPosition: "top-center",
+                defaultDuration: 5000
+            });
+            
+            customMotyf.success("这是自定义实例的消息");
+            customMotyf.error("不会自动关闭", 0);
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/gh/YuiNijika/MotynJS/motyf.js"></script>
+</body>
+</html>
