@@ -1,3 +1,12 @@
+@charset "UTF-8";
+
+/**
+ * MotyfJS
+ * 基于Notyf修改的轻量级消息提示组件
+ * @author 鼠子Tomoriゞ
+ * @link https://github.com/YuiNijika/MotynJS
+ */
+
 .motym {
     position: fixed;
     z-index: 10000000;
